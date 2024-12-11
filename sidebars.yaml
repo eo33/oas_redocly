@@ -2,7 +2,7 @@
   label: Introduction
 - page: get-started.md
   label: Get Started
-- page: authenticaiton.md
+- page: authentication.md
   label: Authentication
 - page: making-a-request.md
   label: Making a request
@@ -10,6 +10,21 @@
   label: Examples
 - page: functionalities.md
   label: Functionalities
+- group: Release Notes
+  items:
+    - page: ./release-notes/5-dec-2024.md
+    - page: ./release-notes/4-dec-2023.md
+    - page: ./release-notes/30-nov-2023.md
+    - page: ./release-notes/24-nov-2023.md
+    - page: ./release-notes/20-nov-2023.md
+    - page: ./release-notes/14-nov-2023.md
+    - page: ./release-notes/26-oct-2023.md
+    - page: ./release-notes/23-oct-2023.md
+    - page: ./release-notes/05-oct-2023.md
+- group: Glossary
+  items:
+    - page: ./glossary/api-terms.md
+    - page: ./glossary/functionality-terms.md
 - separatorLine: true
 - page: ./openapi.yaml
   label: Endpoints

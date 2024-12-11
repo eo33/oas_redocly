@@ -1,0 +1,1969 @@
+openapi: 3.0.0
+info:
+  description: This section contains the API documentation for **The Furniture Bros**.
+  title: API endpoints
+  version: 1.0.0
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: https://thefurniturebros.com
+    description: Production server
+tags:
+  - name: Auth
+    x-displayName: Auth
+  - name: Users
+    x-displayName: Users
+  - name: Checkout
+    x-displayName: Checkout
+  - name: Cart
+    x-displayName: Cart
+  - name: Orders
+    x-displayName: Orders
+  - name: Product
+    x-displayName: Product
+  - name: Statistics
+    x-displayName: Statistics
+
+paths:
+  /auth/register:
+    post:
+      summary: Register an Account
+      description: >-
+        This endpoint allows you to register a user. Once registered, it will
+        return an API key.
+      tags:
+        - Auth
+      requestBody:
+        description: |
+          An object containing the parameters to create and register an account.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                  description: |
+                    The name of the user.
+                email:
+                  type: string
+                  format: email
+                  description: |
+                    The email address of the user.
+                password:
+                  type: string
+                  description: |
+                    The password for the account.
+                admin:
+                  type: boolean
+                  default: false
+                  description: |
+                    Specifies whether the user has administrative privileges.
+              example:
+                name: john doe
+                email: john_doe12@gmail.com
+                password: '123456'
+      responses:
+        '200':
+          description: Successful response. Returns an object containing the API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: >
+                      The API key used to authenticate and authorize the
+                      account.
+                example:
+                  token: >-
+                    eyJhbGciOiJIUzI1NiIsInR5cBGlR1fkzXQKgxLshzVL2lcajQNXEUTH09N-csr98
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+      externalDocs:
+        description: >-
+          The API key uses JSON Web Token (JWT) to authenticate. Learn more
+          about it here.
+        url: https://auth0.com/docs/secure/tokens/json-web-tokens
+  /auth/login:
+    post:
+      summary: Get an API key
+      description: This endpoint allows you to login to an account and retrieve an API key.
+      tags:
+        - Auth
+        - Users
+      requestBody:
+        description: |
+          An object containing the login details.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: |
+                    The email address of the user.
+                password:
+                  type: string
+                  description: |
+                    The password of the account.
+              example:
+                email: john_doe12@gmail.com
+                password: '123456'
+      responses:
+        '200':
+          description: >-
+            Successful response. Returns an object containing the API key and
+            the information about the user.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: >
+                      The API key used to authenticate and authorize the
+                      account. 
+
+                      Use this API key to access the different endpoints.
+                  user:
+                    type: object
+                    description: >
+                      The parameters related to the user. This gives information
+                      about the user.
+                    properties:
+                      _id:
+                        type: string
+                        description: |
+                          The ID of the user.
+                      name:
+                        type: string
+                        description: |
+                          The name of the user.
+                      email:
+                        type: string
+                        format: email
+                        description: |
+                          The email address of the user.
+                      password:
+                        type: string
+                        description: |
+                          The encrypted password of the user.
+                      admin:
+                        type: boolean
+                        description: |
+                          The administrtive privilege of the user.
+                      __v:
+                        type: integer
+                        description: >
+                          The version of the user. The version increases
+                          whenever the account is modified.
+                example:
+                  token: >-
+                    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc0ODhjYWE4ZGQxZmYzZDNlYjk0NTQxIiwiYWRtaW4iOnRydWV9LCJpYXQiOjE3MzI4MDc4ODEsImV4cCI6MTczMjg0Mzg4MX0.aFBDj34nuuNkt95G71QbL7KJTotLyNE0Lu9BKe4Zv0s
+                  user:
+                    _id: 67488caa8dd1ff3d3eb94541
+                    name: test name
+                    email: name_test_admin@gmail.com
+                    password: >-
+                      $2a$10$767ZSzTiC0Jm.8p/Jmyx1eqnciqWn7GCUDA/I7AbiTgmqHfJc/mfC
+                    admin: true
+                    __v: 0
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /auth/validate:
+    get:
+      summary: Validate API key
+      description: This endpoint allows you to validate your API key.
+      tags:
+        - Auth
+      security:
+        - APIKey: []
+      responses:
+        '200':
+          description: >-
+            Successful response. Returns an object containing information
+            related to the user's access privilege.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  authenticate:
+                    type: boolean
+                    description: >
+                      Indicates whether the user is authenticated.varios
+                      endpoints.
+
+                      - `ture`: The user is authenticated.
+
+                      - `false`: The user is not authenticated.
+                  admin:
+                    type: boolean
+                    description: >
+                      Specifies if the authenticated user has administrative
+                      privileges. If you have admin privileges, you can make
+                      requests to admin-only endpoints.
+
+                      - `true`: The user has admin privileges.
+
+                      - `false`: The user does not have admin previleges.
+                example:
+                  authenticate: true
+                  admin: false
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /users/get_all/{page}:
+    get:
+      summary: Get Users
+      description: >-
+        This endpoint allows you to get the info about the users in the
+        application.
+      tags:
+        - Auth
+      parameters:
+        - name: page
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: >-
+            The page number to retrieve (1-based index). Each page returns 20
+            users.
+      security:
+        - APIKey:
+            - admin
+      responses:
+        '200':
+          description: >-
+            Successful response. Returns an object with users statistics in the
+            application.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalUsers:
+                    type: integer
+                    description: |
+                      The total number of users in the application.
+                  adminUsers:
+                    type: integer
+                    description: |
+                      The total number of admin users in the application.
+                  regularUsers:
+                    type: integer
+                    description: |
+                      The total number of regular users in the application.
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          description: The ID of the user.
+                        name:
+                          type: string
+                          description: The name of the user.
+                        email:
+                          type: string
+                          format: email
+                          description: The email address of the user.
+                        password:
+                          type: string
+                          description: The encrypted password of the user.
+                        admin:
+                          type: boolean
+                          description: |
+                            The administrtive privilege of the user.
+                            - `true`: The user has admin privileges.
+                            - `false`: The user does not have admin previleges.
+                        __v:
+                          type: integer
+                          description: >-
+                            The version of the user. The version increases
+                            whenever the account is modified.
+                    description: A list of users, including their details.
+                example:
+                  totalUsers: 51
+                  adminUsers: 11
+                  regularUsers: 40
+                  users:
+                    - _id: 6555a0f89feeac7dccd9b1dd
+                      name: first account
+                      email: first_account@gmail.com
+                      password: >-
+                        $2a$10$jK1bvjH7D/pdjI6mVb9uSuXMeWwcFwhlBYIh7Wqf0CLsey9I3Epx2
+                      admin: false
+                      __v: 0
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /users/edit:
+    post:
+      summary: Edit User Details
+      description: >-
+        This endpoint allows you to edit a user's details. This requires admin
+        privileges.
+      tags:
+        - Auth
+        - Users
+      security:
+        - APIKey:
+            - admin
+      requestBody:
+        description: |
+          An object containing the new details.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  description: >
+                    The user ID of the account to modify. 
+
+                    You can get the list of user ID by using the `POST
+                    /users/get_all/{page}` endpoint.
+                newName:
+                  type: string
+                  description: |
+                    The new name for the user.
+                newEmail:
+                  type: string
+                  format: email
+                  description: |
+                    The new email for the user.
+                newAdminStatus:
+                  type: boolean
+                  description: |
+                    The new admin status for the user. 
+                    - `true`: The user has admin privileges.
+                    - `false`: The user does not have admin previleges.
+              example:
+                userId: 674605a2a18c2f38f2148601
+                newName: Jane Doe
+                newEmail: jane_example@gmail.com
+                newAdminStatus: true
+      responses:
+        '200':
+          description: Successful response. Returns an object containing user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    description: >
+                      The parameters related to the user. This gives information
+                      about the user.
+                    properties:
+                      _id:
+                        type: string
+                        description: |
+                          The ID of the user.
+                      name:
+                        type: string
+                        description: |
+                          The name of the user.
+                      email:
+                        type: string
+                        format: email
+                        description: |
+                          The email address of the user.
+                      password:
+                        type: string
+                        description: |
+                          The encrypted password of the user.
+                      admin:
+                        type: boolean
+                        description: |
+                          The administrtive privilege of the user.
+                      __v:
+                        type: integer
+                        description: >
+                          The version of the user. The version increases
+                          whenever the account is modified.
+                example:
+                  user:
+                    _id: 674605a2a18c2f38f2148601
+                    name: Jane Doe
+                    email: jane_example@gmail.com
+                    password: >-
+                      $2a$10$eaixU5.H3PFYW.9V6NM8A.A.CPnFHtbcWPWsp/I1NWsfxqIG6s87K
+                    admin: false
+                    __v: 0
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /address/list:
+    get:
+      summary: Get Addresses
+      description: |
+        This endpoint allows you to get the list of addresses.
+      tags:
+        - Checkout
+      security:
+        - APIKey: []
+      responses:
+        '200':
+          description: Successful response. Returns the user's address information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    description: Unique identifier for the user address record.
+                  user:
+                    type: object
+                    description: Information about the user associated with the addresses.
+                    properties:
+                      _id:
+                        type: string
+                        description: Unique identifier for the user.
+                      name:
+                        type: string
+                        description: Name of the user.
+                  addresses:
+                    type: array
+                    description: List of addresses associated with the user.
+                    items:
+                      type: object
+                      properties:
+                        address:
+                          type: string
+                          description: The address of the location.
+                        main:
+                          type: boolean
+                          description: Indicates if this address is the main address.
+                        _id:
+                          type: string
+                          description: Unique identifier for the address.
+                  __v:
+                    type: integer
+                    description: Version key for the address record.
+                example:
+                  _id: 6556dd7a50e4db57682be25c
+                  user:
+                    _id: 6555a0f89feeac7dccd9b1dd
+                    name: first account
+                  addresses:
+                    - address: 383 Kent St, Sydney NSW 2000, Australia
+                      main: false
+                      _id: 656bf54c99723847983a9714
+                    - address: 80 Collins St, Melbourne VIC 3000, Australia
+                      main: true
+                      _id: 656d3c9b6f828da5305bad97
+                  __v: 53
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /address/api_key:
+    get:
+      summary: Get Google Places Key
+      description: >-
+        This endpoint allows you to get the API key for Google Places API. Learn
+        more
+        [here](https://developers.google.com/maps/documentation/places/web-service).
+      tags:
+        - Checkout
+      security:
+        - APIKey: []
+      responses:
+        '200':
+          description: Successful response. The order has been created successfully.
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: The API key for Google Places.
+                example: AIzaSyC6ASDCKAAS3G1E2EjRKlzk8TvHziasds"
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /address/add:
+    post:
+      summary: Add an Address
+      description: This endpoint allows you to add an address for the user.
+      tags:
+        - Checkout
+      security:
+        - APIKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - address
+              properties:
+                address:
+                  type: string
+                  description: >-
+                    The address of the user to add. Newly added address will be
+                    selected as the main address.
+            example:
+              address: 383 Kent St, Sydney NSW 2000, Australia
+      responses:
+        '200':
+          description: Successful response. The order has been created successfully.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: success
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /address/select:
+    put:
+      summary: Select Main Address
+      description: This endpoint allows you to select the main address of the user.
+      tags:
+        - Checkout
+      security:
+        - APIKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - addressId
+              properties:
+                addressId:
+                  type: string
+                  description: >
+                    The address ID of the user to be selected as the main
+                    address. 
+
+                    Use the `GET get addresses` endpoint to look at the list of
+                    addresses, and it's ID.
+              example:
+                addressId: 656d3c9b6f828da5305bad97
+      responses:
+        '200':
+          description: Successful response. Returns the user's address information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    description: Unique identifier for the user address record.
+                  user:
+                    type: string
+                    description: Unique identifier for the user.
+                  addresses:
+                    type: array
+                    description: List of addresses associated with the user.
+                    items:
+                      type: object
+                      properties:
+                        address:
+                          type: string
+                          description: The address of the location.
+                        main:
+                          type: boolean
+                          description: Indicates if this address is the main address.
+                        _id:
+                          type: string
+                          description: Unique identifier for the address.
+                  __v:
+                    type: integer
+                    description: Version key for the address record.
+                example:
+                  _id: 6556dd7a50e4db57682be25c
+                  user: 6555a0f89feeac7dccd9b1dd
+                  addresses:
+                    - address: 383 Kent St, Sydney NSW 2000, Australia
+                      main: false
+                      _id: 656bf54c99723847983a9714
+                    - address: 80 Collins St, Melbourne VIC 3000, Australia
+                      main: true
+                      _id: 656d3c9b6f828da5305bad97
+                  __v: 53
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /address/delete:
+    delete:
+      summary: Delete an Address
+      description: This endpoint allows you to delete an address.
+      tags:
+        - Checkout
+      security:
+        - APIKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - addressId
+              properties:
+                addressId:
+                  type: string
+                  description: >
+                    The address ID of the user to be deleted. 
+
+                    Use the `GET get addresses` endpoint to look at the list of
+                    addresses, and it's ID.
+            example:
+              addressId: 674b3347dc3d9360b4c32da3
+      responses:
+        '200':
+          description: Successful response. Returns the user's address information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    description: Unique identifier for the user address record.
+                  user:
+                    type: string
+                    description: Unique identifier for the user.
+                  addresses:
+                    type: array
+                    description: List of addresses associated with the user.
+                    items:
+                      type: object
+                      properties:
+                        address:
+                          type: string
+                          description: The address of the location.
+                        main:
+                          type: boolean
+                          description: Indicates if this address is the main address.
+                        _id:
+                          type: string
+                          description: Unique identifier for the address.
+                  __v:
+                    type: integer
+                    description: Version key for the address record.
+                example:
+                  _id: 6556dd7a50e4db57682be25c
+                  user: 6555a0f89feeac7dccd9b1dd
+                  addresses:
+                    - address: 383 Kent St, Sydney NSW 2000, Australia
+                      main: false
+                      _id: 656bf54c99723847983a9714
+                    - address: 80 Collins St, Melbourne VIC 3000, Australia
+                      main: true
+                      _id: 656d3c9b6f828da5305bad97
+                  __v: 53
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /cart/add:
+    post:
+      summary: Add Items to Cart
+      description: |
+        This endpoint allows you add items to your cart.
+        <div class="info-box">
+          <h4><i class="fas fa-info-circle"></i> Note:</h4>
+          <p>You can only add items to your cart if you are a regular user. Users with admin privilege can't add items to cart.</p>
+        </div>
+      tags:
+        - Cart
+      security:
+        - APIKey: []
+      requestBody:
+        description: |
+          An object containing the parameters to add items.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+                - quantity
+              properties:
+                productId:
+                  type: string
+                  description: >
+                    The ID of the product. You can use the `GET Product list`
+                    endpoint to view available products and it's ID.
+                quantity:
+                  type: integer
+                  description: |
+                    The quantity of items to add.
+              example:
+                productId: 6555a1f49feeac7dccd9b1ee
+                quantity: 20
+      responses:
+        '200':
+          description: Successful response. Returns the result of the operation.
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: Successful operation.
+                example: POST REQUEST SUCCESS
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /cart/items:
+    get:
+      summary: Get Cart Items
+      description: |
+        This endpoint allows you get the current items in your cart.
+      tags:
+        - Cart
+      security:
+        - APIKey: []
+      responses:
+        '200':
+          description: Successful response. Returns the list of items in your cart.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    description: Unique identifier for the order
+                  user:
+                    type: object
+                    description: Information about the user who placed the order
+                    properties:
+                      _id:
+                        type: string
+                        description: Unique identifier for the user
+                      name:
+                        type: string
+                        description: Name of the user
+                      email:
+                        type: string
+                        description: Email address of the user
+                  items:
+                    type: array
+                    description: List of items in the order
+                    items:
+                      type: object
+                      properties:
+                        product:
+                          type: object
+                          description: Details about the product.
+                          properties:
+                            _id:
+                              type: string
+                              description: Unique identifier for the product.
+                            name:
+                              type: string
+                              description: Name of the product.
+                            image:
+                              type: string
+                              description: Image filename of the product.
+                            price:
+                              type: number
+                              description: Price of the product.
+                            description:
+                              type: string
+                              description: Description of the product.
+                            soldCount:
+                              type: integer
+                              description: Number of units sold.
+                            __v:
+                              type: integer
+                              description: >-
+                                The version of the product. The version
+                                increases whenever the product is modified.
+                        quantity:
+                          type: integer
+                          description: Quantity of the product ordered.
+                        _id:
+                          type: string
+                          description: Unique identifier for the item in the order.
+                  __v:
+                    type: integer
+                    description: >-
+                      The version of the cart. The version increases whenever
+                      the cart is modified.
+                example:
+                  _id: 6556aed27e6cd0b318dbb08d
+                  user:
+                    _id: 6555a0f89feeac7dccd9b1dd
+                    name: first account
+                    email: first_account@gmail.com
+                  items:
+                    - product:
+                        _id: 6555a2269feeac7dccd9b1f2
+                        name: White desk
+                        image: 1700110886749.webp
+                        price: 60
+                        description: >-
+                          Maecenas at justo eu eros ultrices vulputate vitae at
+                          augue.
+                        soldCount: 99
+                        __v: 0
+                      quantity: 20
+                      _id: 67498e75990ee7506c8ee954
+                    - product:
+                        _id: 655fefee60b5a0bcc0a9313c
+                        name: stool
+                        image: 1700786158091.webp
+                        price: 60
+                        description: Umde
+                        soldCount: 1
+                        __v: 0
+                      quantity: 25
+                      _id: 67498e82990ee7506c8ee958
+                  __v: 100
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /cart/edit:
+    put:
+      summary: Edit Cart Items
+      description: >-
+        This endpoint allows you to update the quantity of a product in the
+        cart.
+      tags:
+        - Cart
+      security:
+        - APIKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+                - quantity
+              properties:
+                productId:
+                  type: string
+                  description: Unique identifier of the product to update.
+                quantity:
+                  type: integer
+                  description: New quantity of the product.
+              example:
+                productId: 655fefee60b5a0bcc0a9313c
+                quantity: 40
+      responses:
+        '200':
+          description: Successful response. Returns the items in the cart.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    description: Unique identifier for the cart.
+                  user:
+                    type: string
+                    description: Unique identifier for the user who owns the cart.
+                  items:
+                    type: array
+                    description: List of items in the cart.
+                    items:
+                      type: object
+                      properties:
+                        product:
+                          type: string
+                          description: Unique identifier for the product.
+                        quantity:
+                          type: integer
+                          description: Quantity of the product in the cart.
+                        _id:
+                          type: string
+                          description: Unique identifier for the item in the cart.
+                  __v:
+                    type: integer
+                    description: >-
+                      The version of the cart. The version increases whenever
+                      the cart is modified.
+                example:
+                  _id: 6556aed27e6cd0b318dbb08d
+                  user: 6555a0f89feeac7dccd9b1dd
+                  items:
+                    - product: 6555a2269feeac7dccd9b1f2
+                      quantity: 30
+                      _id: 67498e75990ee7506c8ee954
+                    - product: 655fefee60b5a0bcc0a9313c
+                      quantity: 40
+                      _id: 67498e82990ee7506c8ee958
+                  __v: 100
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /cart/delete:
+    delete:
+      summary: Remove Items from Cart
+      description: This endpoint allows you to delete specified items from the user's cart.
+      tags:
+        - Cart
+      security:
+        - APIKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  description: List of product IDs to remove from the cart.
+                  items:
+                    type: string
+              example:
+                items:
+                  - 67498e75990ee7506c8ee954
+      responses:
+        '200':
+          description: Successful response. Returns the updated cart after deletion.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    description: Unique identifier for the cart.
+                  user:
+                    type: string
+                    description: Unique identifier for the user who owns the cart.
+                  items:
+                    type: array
+                    description: List of remaining items in the cart.
+                    items:
+                      type: object
+                      properties:
+                        product:
+                          type: string
+                          description: Unique identifier for the product.
+                        quantity:
+                          type: integer
+                          description: Quantity of the product in the cart.
+                        _id:
+                          type: string
+                          description: Unique identifier for the item in the cart.
+                  __v:
+                    type: integer
+                    description: >-
+                      The version of the cart. The version increases whenever
+                      the cart is modified.
+                example:
+                  _id: 6556aed27e6cd0b318dbb08d
+                  user: 6555a0f89feeac7dccd9b1dd
+                  items:
+                    - product: 655fefee60b5a0bcc0a9313c
+                      quantity: 40
+                      _id: 67498e82990ee7506c8ee958
+                    - product: 65653baad868691c42306f7f
+                      quantity: 41
+                      _id: 6749904c990ee7506c8ee97d
+                  __v: 101
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /orders/get_all:
+    get:
+      summary: Get all Orders
+      description: >
+        This endpoint allows you to get the orders of the user. Order can either
+        be:
+
+        - `pending`: Order is in the `pending` state. It has not been
+        delivered. 
+
+        - `delivery`: Order is in the `delivery` state. It is still in shipment
+        and not completed.
+
+        - `completed`: Order is completed an finalized. 
+
+
+        To change the status of an order, use the **POST Edit Orders** endpoint.
+      tags:
+        - Orders
+      security:
+        - APIKey: []
+      responses:
+        '200':
+          description: Successful response. Returns all of the user's orders.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    orderId:
+                      type: string
+                      description: Unique identifier for the order.
+                    productId:
+                      type: string
+                      description: Unique identifier for the product in the order.
+                    image:
+                      type: string
+                      description: File name of the product's image.
+                    name:
+                      type: string
+                      description: Name of the product.
+                    price:
+                      type: number
+                      description: Price of the product (in dollars).
+                    quantity:
+                      type: integer
+                      description: Quantity of the product in the order.
+                    shipping:
+                      type: string
+                      description: Shipping type (e.g., "Regular").
+                    status:
+                      type: string
+                      description: Current status of the order (e.g., "pending").
+                    createdAt:
+                      type: string
+                      description: Date the order was created.
+                    orderNum:
+                      type: integer
+                      description: Order number associated with the transaction.
+              example:
+                - orderId: 674b37b8dc3d9360b4c32e72
+                  productId: 6555a1f49feeac7dccd9b1ee
+                  image: 1700110836527.webp
+                  name: brown tablede
+                  price: 30
+                  quantity: 4
+                  shipping: Regular
+                  status: pending
+                  createdAt: November 30, 2024
+                  orderNum: 1
+                - orderId: 674b37b8dc3d9360b4c32e72
+                  productId: 655ff05e60b5a0bcc0a9314e
+                  image: 1700786270864.webp
+                  name: Regular table
+                  price: 100
+                  quantity: 4
+                  shipping: Regular
+                  status: pending
+                  createdAt: November 30, 2024
+                  orderNum: 1
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /orders/add:
+    post:
+      summary: Add an Order
+      description: >
+        This endpoint allows users to create a new order by providing the list
+        of items they want to purchase along with the shipping address. 
+
+        - Each item must include the product ID, quantity, and shipping type.
+
+        - The address field specifies the delivery address for the order.
+      tags:
+        - Orders
+      security:
+        - APIKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  description: A list of items to include in the order.
+                  items:
+                    type: object
+                    properties:
+                      product:
+                        type: string
+                        description: Unique identifier of the product.
+                      quantity:
+                        type: integer
+                        description: Number of units of the product.
+                      shipping:
+                        type: string
+                        description: Type of shipping for the product (e.g., "Regular").
+                    required:
+                      - product
+                      - quantity
+                      - shipping
+                address:
+                  type: string
+                  description: Delivery address for the order.
+              required:
+                - items
+                - address
+              example:
+                items:
+                  - product: 655ff05e60b5a0bcc0a9314e
+                    quantity: 15
+                    shipping: Regular
+                  - product: 656427ab575db1ee43d46b57
+                    quantity: 10
+                    shipping: Regular
+                address: Post Office Pl, Carlton VIC 3053, Australia
+      responses:
+        '200':
+          description: Successful response. The order has been created successfully.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ORDER SUCCESS
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /orders/change-status:
+    post:
+      summary: Edit Orders
+      description: >
+        This endpoint allows users to update the status of one or more orders.
+        Valid status values include:
+          - `pending`: The order has not been delivered.
+          - `delivery`: The order is in shipment.
+          - `completed`: The order is finalized and delivered.
+
+        Users must provide the `orderId` and the new `status` for each order.
+      tags:
+        - Orders
+      security:
+        - APIKey:
+            - admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  description: A list of orders with their new statuses.
+                  items:
+                    type: object
+                    properties:
+                      orderId:
+                        type: string
+                        description: Unique identifier for the order.
+                      status:
+                        type: string
+                        description: The new status for the order.
+                        enum:
+                          - pending
+                          - delivery
+                          - completed
+                    required:
+                      - orderId
+                      - status
+              required:
+                - items
+              example:
+                items:
+                  - orderId: 674b46f1dc3d9360b4c32ee2
+                    status: delivery
+                  - orderId: 674b46a8dc3d9360b4c32ede
+                    status: completed
+      responses:
+        '200':
+          description: Successful response. Returns the updated orders with their details.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      description: Unique identifier for the order.
+                    user:
+                      type: string
+                      description: Unique identifier for the user who placed the order.
+                    items:
+                      type: array
+                      description: A list of items in the order.
+                      items:
+                        type: object
+                        properties:
+                          product:
+                            type: string
+                            description: Unique identifier for the product in the order.
+                          quantity:
+                            type: integer
+                            description: Number of units of the product.
+                          shipping:
+                            type: string
+                            description: Shipping type (e.g., "Regular").
+                          _id:
+                            type: string
+                            description: Unique identifier for the item in the order.
+                    status:
+                      type: string
+                      description: Current status of the order.
+                    address:
+                      type: string
+                      description: Delivery address for the order.
+                    createdAt:
+                      type: string
+                      format: date-time
+                      description: Timestamp when the order was created.
+                    __v:
+                      type: integer
+                      description: Internal versioning field.
+              example:
+                - _id: 674b46a8dc3d9360b4c32ede
+                  user: 672050a27def4d23ffcb5166
+                  items:
+                    - product: 6555a1f49feeac7dccd9b1ee
+                      quantity: 4
+                      shipping: Regular
+                      _id: 674b46a8dc3d9360b4c32edf
+                    - product: 6555a2779feeac7dccd9b201
+                      quantity: 3
+                      shipping: Regular
+                      _id: 674b46a8dc3d9360b4c32ee0
+                  status: completed
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /orders/delete:
+    post:
+      summary: Delete Orders
+      description: >
+        This endpoint allows users to delete one or more orders. 
+
+        - Users must provide the `orderId` of each order to be deleted.
+
+        - The response confirms whether the operation was successful and the
+        number of orders deleted.
+      tags:
+        - Orders
+      security:
+        - APIKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderId:
+                  type: array
+                  description: List of order IDs to be deleted.
+                  items:
+                    type: string
+                    description: Unique identifier for an order.
+              required:
+                - orderId
+              example:
+                orderId:
+                  - 674b46f1dc3d9360b4c32ee2
+                  - 674b46a8dc3d9360b4c32ede
+      responses:
+        '200':
+          description: Successful response. Confirms the number of deleted orders.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  acknowledged:
+                    type: boolean
+                    description: Indicates whether the deletion request was acknowledged.
+                  deletedCount:
+                    type: integer
+                    description: The number of orders successfully deleted.
+                example:
+                  acknowledged: true
+                  deletedCount: 2
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /products:
+    get:
+      summary: Get Product list
+      description: >-
+        This endpoint allows you get the list of available products. It shows
+        all available product.
+      tags:
+        - Product
+      responses:
+        '200':
+          description: Successful response. Returns a list of product.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      description: The unique identifier for the product.
+                    name:
+                      type: string
+                      description: The name of the product.
+                    image:
+                      type: string
+                      description: The filename of the product's image.
+                    price:
+                      type: number
+                      format: float
+                      description: The price of the product.
+                    description:
+                      type: string
+                      description: The description of the product.
+                    soldCount:
+                      type: integer
+                      description: The total number of units sold.
+                    __v:
+                      type: integer
+                      description: >-
+                        The version of the product. The version increases
+                        whenever the product is modified.
+                  example:
+                    _id: 6555a1f49feeac7dccd9b1ee
+                    name: brown tablede
+                    image: 1700110836527.webp
+                    price: 30
+                    description: this is a brown table
+                    soldCount: 90
+                    __v: 0
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /products/{filename}:
+    get:
+      summary: Get a Product Image
+      description: >-
+        This endpoint allows you get the image of the product. The image is in
+        the .webp format.
+      tags:
+        - Product
+      parameters:
+        - name: filename
+          in: path
+          required: true
+          example: 1700110836527.webp
+          schema:
+            type: string
+          description: >-
+            The product image filename to use. Use the `GET Product list`
+            endpoint to view all products and their image filenames.
+      responses:
+        '200':
+          description: Successful response. Returns the image of the product.
+          content:
+            image/webp:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+    put:
+      summary: Edit a Product
+      description: This endpoint allows you to edit a product.
+      tags:
+        - Product
+      security:
+        - APIKey:
+            - admin
+      parameters:
+        - name: filename
+          in: path
+          required: true
+          example: 1700110836527.webp
+          schema:
+            type: string
+          description: >-
+            The product image filename to use. Use the `GET Product list`
+            endpoint to view all products and their image filenames.
+      requestBody:
+        description: |
+          An form-data containing the new details.
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The new name of the product.
+                  example: sample_item
+                image:
+                  type: string
+                  format: binary
+                  description: The new filename of the product's image.
+                price:
+                  type: number
+                  format: float
+                  description: The new price of the product.
+                  example: 50
+                description:
+                  type: string
+                  description: The new description of the product.
+                  example: sample description
+                soldCount:
+                  type: integer
+                  description: The new total number of units sold.
+                  example: 35
+      responses:
+        '200':
+          description: Successful response. Returns the new information of the product.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: |
+                      The status of the operation.
+                  updatedProduct:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        description: The unique identifier for the product.
+                      name:
+                        type: string
+                        description: The name of the product.
+                      image:
+                        type: string
+                        description: The filename of the product's image.
+                      price:
+                        type: number
+                        format: float
+                        description: The price of the product.
+                      description:
+                        type: string
+                        description: The description of the product.
+                      soldCount:
+                        type: integer
+                        description: The total number of units sold.
+                      __v:
+                        type: integer
+                        description: >-
+                          The version of the product. The version increases
+                          whenever the product is modified.
+                example:
+                  msg: Product updated successfully
+                  updatedProduct:
+                    _id: 6555a1f49feeac7dccd9b1ee
+                    name: brown tablede
+                    image: 1700110836527.webp
+                    price: 30
+                    description: this is a brown table
+                    soldCount: 90
+                    __v: 0
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+    delete:
+      summary: Delete a Product
+      description: This endpoint allows you get delete a product.
+      security:
+        - APIKey:
+            - admin
+      parameters:
+        - name: filename
+          in: path
+          required: true
+          example: 1701082686603.webp
+          schema:
+            type: string
+          description: >-
+            The product image filename to use. Use the `GET Product list`
+            endpoint to view all products and their image filenames.
+      tags:
+        - Product
+      responses:
+        '200':
+          description: Successful response. Returns the status of the operation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: The status of the operation.
+                example:
+                  msg: Item deleted
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /products/details/{filename}:
+    get:
+      summary: Get Product Details
+      description: This endpoint allows you get the details of a product.
+      tags:
+        - Product
+      parameters:
+        - name: filename
+          in: path
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: >-
+            The product image filename to use. Use the `GET Product list`
+            endpoint to view all products and their image filenames.
+      responses:
+        '200':
+          description: Successful response. Returns the information of the product
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    description: The unique identifier for the product.
+                  name:
+                    type: string
+                    description: The name of the product.
+                  image:
+                    type: string
+                    description: The filename of the product's image.
+                  price:
+                    type: number
+                    format: float
+                    description: The price of the product.
+                  description:
+                    type: string
+                    description: The description of the product.
+                  soldCount:
+                    type: integer
+                    description: The total number of units sold.
+                  __v:
+                    type: integer
+                    description: >-
+                      The version of the product. The version increases whenever
+                      the product is modified.
+                example:
+                  _id: 6555a1f49feeac7dccd9b1ee
+                  name: brown tablede
+                  image: 1700110836527.webp
+                  price: 30
+                  description: this is a brown table
+                  soldCount: 90
+                  __v: 0
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /products/upload:
+    post:
+      summary: Upload a Product
+      description: This endpoint allows you to upload a product.
+      tags:
+        - Product
+      security:
+        - APIKey:
+            - admin
+      requestBody:
+        description: |
+          An form-data containing the new details.
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the product.
+                  example: sample item
+                image:
+                  type: string
+                  format: binary
+                  description: The filename of the product's image.
+                price:
+                  type: number
+                  format: float
+                  description: The price of the product.
+                  example: 50
+                description:
+                  type: string
+                  description: The description of the product.
+                  example: sample description
+                soldCount:
+                  type: integer
+                  description: The total number of units sold.
+                  example: 35
+      responses:
+        '200':
+          description: Successful response. Returns the status of the operation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: The status of the operation.
+                example:
+                  msg: product saved succesfully
+  /stats/dashboard:
+    get:
+      summary: Get User Stats
+      description: >
+        This endpoint provides a summary of key metrics for the users shown in
+        the admin dashboard, including:
+
+        - Total orders and their statuses (pending, delivery, and completed).
+
+        - Total users and total products.
+
+        Each metric includes a text label, count, and a link for further
+        details.
+      tags:
+        - Statistics
+      security:
+        - APIKey:
+            - admin
+      responses:
+        '200':
+          description: Successful response. Returns a summary of dashboard statistics.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                      description: A descriptive label for the statistic.
+                    count:
+                      type: integer
+                      description: The numeric value of the statistic.
+                    link:
+                      type: string
+                      description: >-
+                        A relative URL for detailed information about the
+                        statistic.
+                  required:
+                    - text
+                    - count
+                    - link
+              example:
+                - text: All orders
+                  count: 49
+                  link: orders
+                - text: Pending orders
+                  count: 22
+                  link: orders/pending
+                - text: Delivered orders
+                  count: 12
+                  link: orders/delivery
+                - text: Completed orders
+                  count: 15
+                  link: orders/completed
+                - text: Total users
+                  count: 58
+                  link: users
+                - text: Total products
+                  count: 8
+                  link: products
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /stats/productTable/{page}:
+    get:
+      summary: Get Product Stats
+      description: >
+        This endpoint retrieves product statistics for the specified page,
+        including:
+
+        - Total products sold (`soldCount`).
+
+        - Breakdown of product orders by status (`pending`, `delivery`,
+        `completed`) with counts and total quantities.
+      tags:
+        - Statistics
+      security:
+        - APIKey:
+            - admin
+      parameters:
+        - name: page
+          in: path
+          required: true
+          description: The page number for paginated product statistics.
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Successful response. Returns a paginated list of product statistics.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    product:
+                      type: string
+                      description: Unique identifier for the product.
+                    name:
+                      type: string
+                      description: Name of the product.
+                    soldCount:
+                      type: integer
+                      description: Total number of units sold.
+                    counts:
+                      type: object
+                      description: Breakdown of orders by status.
+                      properties:
+                        pending:
+                          type: object
+                          properties:
+                            count:
+                              type: integer
+                              description: Number of pending orders.
+                            totalQuantity:
+                              type: integer
+                              description: Total quantity of products in pending orders.
+                        delivery:
+                          type: object
+                          properties:
+                            count:
+                              type: integer
+                              description: Number of delivery orders.
+                            totalQuantity:
+                              type: integer
+                              description: Total quantity of products in delivery orders.
+                        completed:
+                          type: object
+                          properties:
+                            count:
+                              type: integer
+                              description: Number of completed orders.
+                            totalQuantity:
+                              type: integer
+                              description: Total quantity of products in completed orders.
+                  required:
+                    - product
+                    - name
+                    - soldCount
+                    - counts
+              example:
+                - product: 6555a1f49feeac7dccd9b1ee
+                  name: brown tablede
+                  soldCount: 90
+                  counts:
+                    delivery:
+                      count: 6
+                      totalQuantity: 12
+                    completed:
+                      count: 7
+                      totalQuantity: 30
+                    pending:
+                      count: 13
+                      totalQuantity: 74
+                - product: 655ff05e60b5a0bcc0a9314e
+                  name: Regular table
+                  soldCount: 31
+                  counts:
+                    delivery:
+                      count: 1
+                      totalQuantity: 1
+                    completed:
+                      count: 2
+                      totalQuantity: 2
+                    pending:
+                      count: 4
+                      totalQuantity: 11
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+  /stats/orders/all/{page}:
+    get:
+      summary: Get Order Stats
+      description: |
+        This endpoint retrieves order statistics for the specified page.
+      tags:
+        - Statistics
+      security:
+        - APIKey:
+            - admin
+      parameters:
+        - name: page
+          in: path
+          required: true
+          description: The page number for pagination.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: A list of orders.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalOrders:
+                    type: integer
+                    description: Total number of orders.
+                    example: 49
+                  orders:
+                    type: array
+                    description: List of all orders.
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          description: Unique identifier for the order.
+                          example: 674b37b8dc3d9360b4c32e72
+                        user:
+                          type: object
+                          description: User who placed the order.
+                          properties:
+                            _id:
+                              type: string
+                              description: Unique identifier for the user.
+                              example: 672050a27def4d23ffcb5166
+                            email:
+                              type: string
+                              description: Email address of the user.
+                              example: first123_29@gmail.com
+                        items:
+                          type: array
+                          description: List of items in the order.
+                          items:
+                            type: object
+                            properties:
+                              product:
+                                type: object
+                                description: Product details.
+                                properties:
+                                  _id:
+                                    type: string
+                                    description: Unique identifier for the product.
+                                    example: 6555a1f49feeac7dccd9b1ee
+                                  name:
+                                    type: string
+                                    description: Name of the product.
+                                    example: brown tablede
+                                  price:
+                                    type: number
+                                    description: Price of the product.
+                                    example: 30
+                              quantity:
+                                type: integer
+                                description: Quantity of the product ordered.
+                                example: 4
+                              shipping:
+                                type: string
+                                description: Shipping method selected for the item.
+                                example: Regular
+                              _id:
+                                type: string
+                                description: Unique identifier for the item in the order.
+                                example: 674b37b8dc3d9360b4c32e73
+                        status:
+                          type: string
+                          description: Current status of the order.
+                          example: pending
+                        address:
+                          type: string
+                          description: Shipping address for the order.
+                          example: Tester Dr, Blackwood SA 5051, Australia
+                        createdAt:
+                          type: string
+                          description: Date when the order was created.
+                          example: 30 Nov 2024
+                        __v:
+                          type: integer
+                          description: Version key for the order document.
+                          example: 0
+        '400':
+          description: See message description.
+        '500':
+          description: see message description.
+components:
+  securitySchemes:
+    APIKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: |
+        Provide your API key.
+x-tagGroups:
+  - name: The Furniture Bros Account OpenAPI Specifications
+    tags:
+      - Auth
+      - Users
+  - name: The Furniture Bros Address OpenAPI Specifications
+    tags:
+      - Checkout
+  - name: The Furniture Bros Cart OpenAPI Specifications
+    tags:
+      - Cart
+  - name: The Furniture Bros Orders OpenAPI Specifications
+    tags:
+      - Orders
+  - name: The Furniture Bros Product OpenAPI Specifications
+    tags:
+      - Product
+  - name: The Furniture Bros Statistics OpenAPI Specifications
+    tags:
+      - Statistics

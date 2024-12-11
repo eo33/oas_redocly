@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@redocly/realm": "^0.111.0"
+  },
+  "scripts": {
+    "start": "npx @redocly/cli preview"
+  }
+}

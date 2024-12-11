@@ -22,14 +22,14 @@ API (Application Programming Interface) allows applications to communicate with 
 
 **Understand the Collection Structure**
 
-- Each collection consists of requests grouped into [different categories](../#endpoint-categories).
+- Each collection consists of requests grouped into [different categories].
 - Click on a request to view:
   - **URL:** The API endpoint.
   - **Method:** GET, POST, PUT, DELETE, etc.
   - **Headers:** Metadata required by the API.
   - **Body (if applicable):** Data to send with POST or PUT requests.
 
-Learn more about the structure of a **REST API** by visiting the[ making a request ](making-a-request.md)page.
+Learn more about the structure of a **REST API** by visiting the[ making a request ]page.
 
 #### **Make Your First Request**
 

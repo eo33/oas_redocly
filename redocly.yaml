@@ -1,2 +1,5 @@
 reunite:
   ignoreLinkChecker: true
+logo:
+  image: ./images/logo.png
+  link: /
