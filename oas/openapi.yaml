@@ -1,0 +1,81 @@
+openapi: 3.0.0
+info:
+  description: This file contains the OpenAPI specifications for the Acocunt APIs of **The Furniture Bros**.
+  title: The Furniture Bros Account OpenAPI Specifications
+  version: 1.0.0
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: https://thefurniturebros.com
+    description: Production server
+components:
+  securitySchemes:
+    APIKey:
+      type: apiKey
+      in: header
+      name: "Authorization"
+      description: |
+        Provide your API key.
+tags:
+  - name: Account
+    description: Operations related to account.
+  - name: Product
+    description: Operations related to products.
+  - name: Cart
+    description: Operations related to cart.
+  - name: Checkout
+    description: Operations related to checkout.
+  - name: Orders
+    description: Operations related to orders.
+paths:
+  /auth/register:
+    $ref: "./paths/Account/auth-register.yaml"
+  /auth/login:
+    $ref: "./paths/Account/auth-login.yaml"
+  /auth/validate:
+    $ref: "./paths/Account/auth-validate.yaml"
+  /users/get_all/{page}:
+    $ref: "./paths/Account/users-get-all-page.yaml"
+  /users/edit:
+    $ref: "./paths/Account/users-edit.yaml"
+  /products:
+    $ref: "./paths/Product/products.yaml"
+  /products/{filename}:
+    $ref: "./paths/Product/products-filename.yaml"
+  /products/details/{filename}:
+    $ref: "./paths/Product/products-details-filename.yaml"
+  /products/upload:
+    $ref: "./paths/Product/products-upload.yaml"
+  /cart/add:
+    $ref: "./paths/Cart/cart-add.yaml"
+  /cart/items:
+    $ref: "./paths/Cart/cart-items.yaml"
+  /cart/edit:
+    $ref: "./paths/Cart/cart-edit.yaml"
+  /cart/delete:
+    $ref: "./paths/Cart/cart-delete.yaml"
+  /address/list:
+    $ref: "./paths/Address/address-list.yaml"
+  /address/api_key:
+    $ref: "./paths/Address/address-api-key.yaml"
+  /address/add:
+    $ref: "./paths/Address/address-add.yaml"
+  /address/select:
+    $ref: "./paths/Address/address-select.yaml"
+  /address/delete:
+    $ref: "./paths/Address/address-delete.yaml"
+  /orders/get_all:
+    $ref: "./paths/Orders/orders-add.yaml"
+  /orders/add:
+    $ref: "./paths/Orders/orders-add.yaml"
+  /orders/change-status:
+    $ref: "./paths/Orders/orders-change-status.yaml"
+  /orders/delete:
+    $ref: "./paths/Orders/orders-delete.yaml"
+  /stats/dashboard:
+    $ref: "./paths/Statistics/stats-dashboard.yaml"
+  /stats/productTable/{page}:
+    $ref: "./paths/Statistics/stats-productTable-page.yaml"
+  /stats/orders/all/{page}:
+    $ref: "./paths/Statistics/stats-orders-all-page.yaml"

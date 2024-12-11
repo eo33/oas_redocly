@@ -1,0 +1,54 @@
+post:
+  summary: Upload a Product
+  operationId: upload-a-product
+  description: This endpoint allows you to upload a product.
+  tags:
+    - Product
+  security:
+    - APIKey: [admin]
+  requestBody:
+    description: |
+      An form-data containing the new details.
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              description: The name of the product.
+              example: "sample item"
+            image:
+              type: string
+              format: binary
+              description: The filename of the product's image.
+            price:
+              type: number
+              format: float
+              description: The price of the product.
+              example: 50
+            description:
+              type: string
+              description: The description of the product.
+              example: "sample description"
+            soldCount:
+              type: integer
+              description: The total number of units sold.
+              example: 35
+  responses:
+    "200":
+      description: Successful response. Returns the status of the operation.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              msg:
+                type: string
+                description: The status of the operation.
+            example:
+              msg: "product saved succesfully"
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

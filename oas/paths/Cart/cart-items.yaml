@@ -1,0 +1,105 @@
+get:
+  summary: Get Cart Items
+  operationId: get-cart-items
+  description: |
+    This endpoint allows you get the current items in your cart.
+  tags:
+    - Cart
+  security:
+    - APIKey: []
+  responses:
+    "200":
+      description: Successful response. Returns the list of items in your cart.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+                description: Unique identifier for the order
+              user:
+                type: object
+                description: Information about the user who placed the order
+                properties:
+                  _id:
+                    type: string
+                    description: Unique identifier for the user
+                  name:
+                    type: string
+                    description: Name of the user
+                  email:
+                    type: string
+                    description: Email address of the user
+              items:
+                type: array
+                description: List of items in the order
+                items:
+                  type: object
+                  properties:
+                    product:
+                      type: object
+                      description: Details about the product.
+                      properties:
+                        _id:
+                          type: string
+                          description: Unique identifier for the product.
+                        name:
+                          type: string
+                          description: Name of the product.
+                        image:
+                          type: string
+                          description: Image filename of the product.
+                        price:
+                          type: number
+                          description: Price of the product.
+                        description:
+                          type: string
+                          description: Description of the product.
+                        soldCount:
+                          type: integer
+                          description: Number of units sold.
+                        __v:
+                          type: integer
+                          description: The version of the product. The version increases whenever the product is modified.
+                    quantity:
+                      type: integer
+                      description: Quantity of the product ordered.
+                    _id:
+                      type: string
+                      description: Unique identifier for the item in the order.
+              __v:
+                type: integer
+                description: The version of the cart. The version increases whenever the cart is modified.
+            example:
+              _id: "6556aed27e6cd0b318dbb08d"
+              user:
+                _id: "6555a0f89feeac7dccd9b1dd"
+                name: "first account"
+                email: "first_account@gmail.com"
+              items:
+                - product:
+                    _id: "6555a2269feeac7dccd9b1f2"
+                    name: "White desk"
+                    image: "1700110886749.webp"
+                    price: 60
+                    description: "Maecenas at justo eu eros ultrices vulputate vitae at augue."
+                    soldCount: 99
+                    __v: 0
+                  quantity: 20
+                  _id: "67498e75990ee7506c8ee954"
+                - product:
+                    _id: "655fefee60b5a0bcc0a9313c"
+                    name: "stool"
+                    image: "1700786158091.webp"
+                    price: 60
+                    description: "Umde"
+                    soldCount: 1
+                    __v: 0
+                  quantity: 25
+                  _id: "67498e82990ee7506c8ee958"
+              __v: 100
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

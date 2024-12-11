@@ -1,0 +1,105 @@
+get:
+  summary: Get Product Stats
+  operationId: get-product-stats
+  description: |
+    This endpoint retrieves product statistics for the specified page, including:
+    - Total products sold (`soldCount`).
+    - Breakdown of product orders by status (`pending`, `delivery`, `completed`) with counts and total quantities.
+  tags:
+    - Statistics
+  security:
+    - APIKey: [admin]
+  parameters:
+    - name: page
+      in: path
+      required: true
+      description: The page number for paginated product statistics.
+      schema:
+        type: integer
+        minimum: 1
+  responses:
+    "200":
+      description: Successful response. Returns a paginated list of product statistics.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                product:
+                  type: string
+                  description: Unique identifier for the product.
+                name:
+                  type: string
+                  description: Name of the product.
+                soldCount:
+                  type: integer
+                  description: Total number of units sold.
+                counts:
+                  type: object
+                  description: Breakdown of orders by status.
+                  properties:
+                    pending:
+                      type: object
+                      properties:
+                        count:
+                          type: integer
+                          description: Number of pending orders.
+                        totalQuantity:
+                          type: integer
+                          description: Total quantity of products in pending orders.
+                    delivery:
+                      type: object
+                      properties:
+                        count:
+                          type: integer
+                          description: Number of delivery orders.
+                        totalQuantity:
+                          type: integer
+                          description: Total quantity of products in delivery orders.
+                    completed:
+                      type: object
+                      properties:
+                        count:
+                          type: integer
+                          description: Number of completed orders.
+                        totalQuantity:
+                          type: integer
+                          description: Total quantity of products in completed orders.
+              required:
+                - product
+                - name
+                - soldCount
+                - counts
+          example:
+            - product: "6555a1f49feeac7dccd9b1ee"
+              name: "brown tablede"
+              soldCount: 90
+              counts:
+                delivery:
+                  count: 6
+                  totalQuantity: 12
+                completed:
+                  count: 7
+                  totalQuantity: 30
+                pending:
+                  count: 13
+                  totalQuantity: 74
+            - product: "655ff05e60b5a0bcc0a9314e"
+              name: "Regular table"
+              soldCount: 31
+              counts:
+                delivery:
+                  count: 1
+                  totalQuantity: 1
+                completed:
+                  count: 2
+                  totalQuantity: 2
+                pending:
+                  count: 4
+                  totalQuantity: 11
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

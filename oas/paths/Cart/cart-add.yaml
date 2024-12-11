@@ -1,0 +1,49 @@
+post:
+  summary: Add Items to Cart
+  operationId: add-items-to-cart
+  description: |
+    This endpoint allows you add items to your cart.
+    <div class="info-box">
+      <h4><i class="fas fa-info-circle"></i> Note:</h4>
+      <p>You can only add items to your cart if you are a regular user. Users with admin privilege can't add items to cart.</p>
+    </div>
+  tags:
+    - Cart
+  security:
+    - APIKey: []
+  requestBody:
+    description: |
+      An object containing the parameters to add items.
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - productId
+            - quantity
+          properties:
+            productId:
+              type: string
+              description: |
+                The ID of the product. You can use the `GET Product list` endpoint to view available products and it's ID.
+            quantity:
+              type: integer
+              description: |
+                The quantity of items to add.
+          example:
+            productId: "6555a1f49feeac7dccd9b1ee"
+            quantity: 20
+  responses:
+    "200":
+      description: Successful response. Returns the result of the operation.
+      content:
+        text/plain:
+          schema:
+            type: string
+            description: Successful operation.
+            example: "POST REQUEST SUCCESS"
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

@@ -1,0 +1,112 @@
+post:
+  summary: Edit Orders
+  operationId: edit-orders
+  description: |
+    This endpoint allows users to update the status of one or more orders. Valid status values include:
+      - `pending`: The order has not been delivered.
+      - `delivery`: The order is in shipment.
+      - `completed`: The order is finalized and delivered.
+
+    Users must provide the `orderId` and the new `status` for each order.
+  tags:
+    - Orders
+  security:
+    - APIKey: [admin]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            items:
+              type: array
+              description: A list of orders with their new statuses.
+              items:
+                type: object
+                properties:
+                  orderId:
+                    type: string
+                    description: Unique identifier for the order.
+                  status:
+                    type: string
+                    description: The new status for the order.
+                    enum:
+                      - pending
+                      - delivery
+                      - completed
+                required:
+                  - orderId
+                  - status
+          required:
+            - items
+          example:
+            items:
+              - orderId: "674b46f1dc3d9360b4c32ee2"
+                status: "delivery"
+              - orderId: "674b46a8dc3d9360b4c32ede"
+                status: "completed"
+  responses:
+    "200":
+      description: Successful response. Returns the updated orders with their details.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                _id:
+                  type: string
+                  description: Unique identifier for the order.
+                user:
+                  type: string
+                  description: Unique identifier for the user who placed the order.
+                items:
+                  type: array
+                  description: A list of items in the order.
+                  items:
+                    type: object
+                    properties:
+                      product:
+                        type: string
+                        description: Unique identifier for the product in the order.
+                      quantity:
+                        type: integer
+                        description: Number of units of the product.
+                      shipping:
+                        type: string
+                        description: Shipping type (e.g., "Regular").
+                      _id:
+                        type: string
+                        description: Unique identifier for the item in the order.
+                status:
+                  type: string
+                  description: Current status of the order.
+                address:
+                  type: string
+                  description: Delivery address for the order.
+                createdAt:
+                  type: string
+                  format: date-time
+                  description: Timestamp when the order was created.
+                __v:
+                  type: integer
+                  description: Internal versioning field.
+          example:
+            - _id: "674b46a8dc3d9360b4c32ede"
+              user: "672050a27def4d23ffcb5166"
+              items:
+                - product: "6555a1f49feeac7dccd9b1ee"
+                  quantity: 4
+                  shipping: "Regular"
+                  _id: "674b46a8dc3d9360b4c32edf"
+                - product: "6555a2779feeac7dccd9b201"
+                  quantity: 3
+                  shipping: "Regular"
+                  _id: "674b46a8dc3d9360b4c32ee0"
+              status: "completed"
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

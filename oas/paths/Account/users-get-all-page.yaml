@@ -1,0 +1,79 @@
+get:
+  summary: Get Users
+  operationId: get-users
+  description: This endpoint allows you to get the info about the users in the application.
+  tags:
+    - Account
+  parameters:
+    - name: page
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+      description: The page number to retrieve (1-based index). Each page returns 20 users.
+  security:
+    - APIKey: [admin]
+  responses:
+    "200":
+      description: Successful response. Returns an object with users statistics in the application.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              totalUsers:
+                type: integer
+                description: |
+                  The total number of users in the application.
+              adminUsers:
+                type: integer
+                description: |
+                  The total number of admin users in the application.
+              regularUsers:
+                type: integer
+                description: |
+                  The total number of regular users in the application.
+              users:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      description: The ID of the user.
+                    name:
+                      type: string
+                      description: The name of the user.
+                    email:
+                      type: string
+                      format: email
+                      description: The email address of the user.
+                    password:
+                      type: string
+                      description: The encrypted password of the user.
+                    admin:
+                      type: boolean
+                      description: |
+                        The administrtive privilege of the user.
+                        - `true`: The user has admin privileges.
+                        - `false`: The user does not have admin previleges.
+                    __v:
+                      type: integer
+                      description: The version of the user. The version increases whenever the account is modified.
+                description: A list of users, including their details.
+            example:
+              totalUsers: 51
+              adminUsers: 11
+              regularUsers: 40
+              users:
+                - _id: 6555a0f89feeac7dccd9b1dd
+                  name: first account
+                  email: first_account@gmail.com
+                  password: "$2a$10$jK1bvjH7D/pdjI6mVb9uSuXMeWwcFwhlBYIh7Wqf0CLsey9I3Epx2"
+                  admin: false
+                  __v: 0
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

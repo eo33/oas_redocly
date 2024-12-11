@@ -1,0 +1,71 @@
+delete:
+  summary: Delete an Address
+  operationId: delete-an-address
+  description: This endpoint allows you to delete an address.
+  tags:
+    - Checkout
+  security:
+    - APIKey: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - addressId
+          properties:
+            addressId:
+              type: string
+              description: |
+                The address ID of the user to be deleted. 
+                Use the `GET get addresses` endpoint to look at the list of addresses, and it's ID.
+        example:
+          addressId: "674b3347dc3d9360b4c32da3"
+  responses:
+    "200":
+      description: Successful response. Returns the user's address information.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+                description: Unique identifier for the user address record.
+              user:
+                type: string
+                description: Unique identifier for the user.
+              addresses:
+                type: array
+                description: List of addresses associated with the user.
+                items:
+                  type: object
+                  properties:
+                    address:
+                      type: string
+                      description: The address of the location.
+                    main:
+                      type: boolean
+                      description: Indicates if this address is the main address.
+                    _id:
+                      type: string
+                      description: Unique identifier for the address.
+              __v:
+                type: integer
+                description: Version key for the address record.
+            example:
+              _id: "6556dd7a50e4db57682be25c"
+              user: "6555a0f89feeac7dccd9b1dd"
+              addresses:
+                - address: "383 Kent St, Sydney NSW 2000, Australia"
+                  main: false
+                  _id: "656bf54c99723847983a9714"
+                - address: "80 Collins St, Melbourne VIC 3000, Australia"
+                  main: true
+                  _id: "656d3c9b6f828da5305bad97"
+              __v: 53
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

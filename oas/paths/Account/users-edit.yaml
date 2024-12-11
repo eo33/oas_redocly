@@ -1,0 +1,93 @@
+post:
+  summary: Edit User Details
+  operationId: edit-user-details
+  description: This endpoint allows you to edit a user's details. This requires admin privileges.
+  tags:
+    - Account
+  security:
+    - APIKey: [admin]
+  requestBody:
+    description: |
+      An object containing the new details.
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            userId:
+              type: string
+              description: |
+                The user ID of the account to modify. 
+                You can get the list of user ID by using the `POST /users/get_all/{page}` endpoint.
+            newName:
+              type: string
+              description: |
+                The new name for the user.
+            newEmail:
+              type: string
+              format: email
+              description: |
+                The new email for the user.
+            newAdminStatus:
+              type: boolean
+              description: |
+                The new admin status for the user. 
+                - `true`: The user has admin privileges.
+                - `false`: The user does not have admin previleges.
+          example:
+            userId: "674605a2a18c2f38f2148601"
+            newName: "Jane Doe"
+            newEmail: "jane_example@gmail.com"
+            newAdminStatus: true
+  responses:
+    "200":
+      description: Successful response. Returns an object containing user information.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                description: |
+                  The parameters related to the user. This gives information about the user.
+                properties:
+                  _id:
+                    type: string
+                    description: |
+                      The ID of the user.
+                  name:
+                    type: string
+                    description: |
+                      The name of the user.
+                  email:
+                    type: string
+                    format: email
+                    description: |
+                      The email address of the user.
+                  password:
+                    type: string
+                    description: |
+                      The encrypted password of the user.
+                  admin:
+                    type: boolean
+                    description: |
+                      The administrtive privilege of the user.
+                  __v:
+                    type: integer
+                    description: |
+                      The version of the user. The version increases whenever the account is modified.
+            example:
+              user:
+                _id: 674605a2a18c2f38f2148601
+                name: Jane Doe
+                email: jane_example@gmail.com
+                password: "$2a$10$eaixU5.H3PFYW.9V6NM8A.A.CPnFHtbcWPWsp/I1NWsfxqIG6s87K"
+                admin: false
+                __v: 0
+
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

@@ -1,0 +1,21 @@
+get:
+  summary: Get Google Places Key
+  operationId: get-google-places-key
+  description: This endpoint allows you to get the API key for Google Places API. Learn more [here](https://developers.google.com/maps/documentation/places/web-service).
+  tags:
+    - Checkout
+  security:
+    - APIKey: []
+  responses:
+    "200":
+      description: Successful response. The order has been created successfully.
+      content:
+        text/plain:
+          schema:
+            type: string
+            description: The API key for Google Places.
+            example: AIzaSyC6ASDCKAAS3G1E2EjRKlzk8TvHziasds"
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

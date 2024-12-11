@@ -1,0 +1,88 @@
+post:
+  summary: Get an API key
+  operationId: get-an-api-key
+  description: This endpoint allows you to login to an account and retrieve an API key.
+  tags:
+    - Account
+  security: []
+  requestBody:
+    description: |
+      An object containing the login details.
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - email
+            - password
+          properties:
+            email:
+              type: string
+              format: email
+              description: |
+                The email address of the user.
+            password:
+              type: string
+              description: |
+                The password of the account.
+          example:
+            email: "john_doe12@gmail.com"
+            password: "123456"
+  responses:
+    "200":
+      description: Successful response. Returns an object containing the API key and the information about the user.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: |
+                  The API key used to authenticate and authorize the account. 
+                  Use this API key to access the different endpoints.
+              user:
+                type: object
+                description: |
+                  The parameters related to the user. This gives information about the user.
+                properties:
+                  _id:
+                    type: string
+                    description: |
+                      The ID of the user.
+                  name:
+                    type: string
+                    description: |
+                      The name of the user.
+                  email:
+                    type: string
+                    format: email
+                    description: |
+                      The email address of the user.
+                  password:
+                    type: string
+                    description: |
+                      The encrypted password of the user.
+                  admin:
+                    type: boolean
+                    description: |
+                      The administrtive privilege of the user.
+                  __v:
+                    type: integer
+                    description: |
+                      The version of the user. The version increases whenever the account is modified.
+            example:
+              token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc0ODhjYWE4ZGQxZmYzZDNlYjk0NTQxIiwiYWRtaW4iOnRydWV9LCJpYXQiOjE3MzI4MDc4ODEsImV4cCI6MTczMjg0Mzg4MX0.aFBDj34nuuNkt95G71QbL7KJTotLyNE0Lu9BKe4Zv0s
+              user:
+                _id: 67488caa8dd1ff3d3eb94541
+                name: test name
+                email: name_test_admin@gmail.com
+                password: "$2a$10$767ZSzTiC0Jm.8p/Jmyx1eqnciqWn7GCUDA/I7AbiTgmqHfJc/mfC"
+                admin: true
+                __v: 0
+
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

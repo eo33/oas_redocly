@@ -1,0 +1,64 @@
+post:
+  summary: Add an Order
+  operationId: add-an-order
+  description: |
+    This endpoint allows users to create a new order by providing the list of items they want to purchase along with the shipping address. 
+    - Each item must include the product ID, quantity, and shipping type.
+    - The address field specifies the delivery address for the order.
+  tags:
+    - Orders
+  security:
+    - APIKey: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            items:
+              type: array
+              description: A list of items to include in the order.
+              items:
+                type: object
+                properties:
+                  product:
+                    type: string
+                    description: Unique identifier of the product.
+                  quantity:
+                    type: integer
+                    description: Number of units of the product.
+                  shipping:
+                    type: string
+                    description: Type of shipping for the product (e.g., "Regular").
+                required:
+                  - product
+                  - quantity
+                  - shipping
+            address:
+              type: string
+              description: Delivery address for the order.
+          required:
+            - items
+            - address
+          example:
+            items:
+              - product: "655ff05e60b5a0bcc0a9314e"
+                quantity: 15
+                shipping: "Regular"
+              - product: "656427ab575db1ee43d46b57"
+                quantity: 10
+                shipping: "Regular"
+            address: "Post Office Pl, Carlton VIC 3053, Australia"
+  responses:
+    "200":
+      description: Successful response. The order has been created successfully.
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: ORDER SUCCESS
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

@@ -1,0 +1,79 @@
+get:
+  summary: Get all Orders
+  operationId: get-all-orders
+  description: |
+    This endpoint allows you to get the orders of the user. Order can either be:
+    - `pending`: Order is in the `pending` state. It has not been delivered. 
+    - `delivery`: Order is in the `delivery` state. It is still in shipment and not completed.
+    - `completed`: Order is completed an finalized. 
+
+    To change the status of an order, use the **POST Edit Orders** endpoint.
+  tags:
+    - Orders
+  security:
+    - APIKey: []
+  responses:
+    "200":
+      description: Successful response. Returns all of the user's orders.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                orderId:
+                  type: string
+                  description: Unique identifier for the order.
+                productId:
+                  type: string
+                  description: Unique identifier for the product in the order.
+                image:
+                  type: string
+                  description: File name of the product's image.
+                name:
+                  type: string
+                  description: Name of the product.
+                price:
+                  type: number
+                  description: Price of the product (in dollars).
+                quantity:
+                  type: integer
+                  description: Quantity of the product in the order.
+                shipping:
+                  type: string
+                  description: Shipping type (e.g., "Regular").
+                status:
+                  type: string
+                  description: Current status of the order (e.g., "pending").
+                createdAt:
+                  type: string
+                  description: Date the order was created.
+                orderNum:
+                  type: integer
+                  description: Order number associated with the transaction.
+          example:
+            - orderId: 674b37b8dc3d9360b4c32e72
+              productId: 6555a1f49feeac7dccd9b1ee
+              image: 1700110836527.webp
+              name: brown tablede
+              price: 30
+              quantity: 4
+              shipping: Regular
+              status: pending
+              createdAt: November 30, 2024
+              orderNum: 1
+            - orderId: 674b37b8dc3d9360b4c32e72
+              productId: 655ff05e60b5a0bcc0a9314e
+              image: 1700786270864.webp
+              name: Regular table
+              price: 100
+              quantity: 4
+              shipping: Regular
+              status: pending
+              createdAt: November 30, 2024
+              orderNum: 1
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

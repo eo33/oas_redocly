@@ -1,0 +1,74 @@
+put:
+  summary: Edit Cart Items
+  operationId: edit-cart-items
+  description: This endpoint allows you to update the quantity of a product in the cart.
+  tags:
+    - Cart
+  security:
+    - APIKey: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - productId
+            - quantity
+          properties:
+            productId:
+              type: string
+              description: Unique identifier of the product to update.
+            quantity:
+              type: integer
+              description: New quantity of the product.
+          example:
+            productId: "655fefee60b5a0bcc0a9313c"
+            quantity: 40
+  responses:
+    "200":
+      description: Successful response. Returns the items in the cart.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+                description: Unique identifier for the cart.
+              user:
+                type: string
+                description: Unique identifier for the user who owns the cart.
+              items:
+                type: array
+                description: List of items in the cart.
+                items:
+                  type: object
+                  properties:
+                    product:
+                      type: string
+                      description: Unique identifier for the product.
+                    quantity:
+                      type: integer
+                      description: Quantity of the product in the cart.
+                    _id:
+                      type: string
+                      description: Unique identifier for the item in the cart.
+              __v:
+                type: integer
+                description: The version of the cart. The version increases whenever the cart is modified.
+            example:
+              _id: "6556aed27e6cd0b318dbb08d"
+              user: "6555a0f89feeac7dccd9b1dd"
+              items:
+                - product: "6555a2269feeac7dccd9b1f2"
+                  quantity: 30
+                  _id: "67498e75990ee7506c8ee954"
+                - product: "655fefee60b5a0bcc0a9313c"
+                  quantity: 40
+                  _id: "67498e82990ee7506c8ee958"
+              __v: 100
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

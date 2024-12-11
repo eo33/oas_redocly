@@ -1,0 +1,57 @@
+get:
+  summary: Get Product Details
+  operationId: get-product-details
+  description: This endpoint allows you get the details of a product.
+  tags:
+    - Product
+  security: []
+  parameters:
+    - name: filename
+      in: path
+      required: true
+      schema:
+        type: string
+        minimum: 1
+      description: The product image filename to use. Use the `GET Product list` endpoint to view all products and their image filenames.
+  responses:
+    "200":
+      description: Successful response. Returns the information of the product
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+                description: The unique identifier for the product.
+              name:
+                type: string
+                description: The name of the product.
+              image:
+                type: string
+                description: The filename of the product's image.
+              price:
+                type: number
+                format: float
+                description: The price of the product.
+              description:
+                type: string
+                description: The description of the product.
+              soldCount:
+                type: integer
+                description: The total number of units sold.
+              __v:
+                type: integer
+                description: The version of the product. The version increases whenever the product is modified.
+            example:
+              _id: 6555a1f49feeac7dccd9b1ee
+              name: brown tablede
+              image: 1700110836527.webp
+              price: 30
+              description: this is a brown table
+              soldCount: 90
+              __v: 0
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

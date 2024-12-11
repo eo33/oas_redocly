@@ -1,0 +1,105 @@
+get:
+  summary: Get Order Stats
+  operationId: get-order-stats
+  description: |
+    This endpoint retrieves order statistics for the specified page.
+  tags:
+    - Statistics
+  security:
+    - APIKey: [admin]
+  parameters:
+    - name: page
+      in: path
+      required: true
+      description: The page number for pagination.
+      schema:
+        type: integer
+        example: 1
+  responses:
+    "200":
+      description: A list of orders.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              totalOrders:
+                type: integer
+                description: Total number of orders.
+                example: 49
+              orders:
+                type: array
+                description: List of all orders.
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      description: Unique identifier for the order.
+                      example: "674b37b8dc3d9360b4c32e72"
+                    user:
+                      type: object
+                      description: User who placed the order.
+                      properties:
+                        _id:
+                          type: string
+                          description: Unique identifier for the user.
+                          example: "672050a27def4d23ffcb5166"
+                        email:
+                          type: string
+                          description: Email address of the user.
+                          example: "first123_29@gmail.com"
+                    items:
+                      type: array
+                      description: List of items in the order.
+                      items:
+                        type: object
+                        properties:
+                          product:
+                            type: object
+                            description: Product details.
+                            properties:
+                              _id:
+                                type: string
+                                description: Unique identifier for the product.
+                                example: "6555a1f49feeac7dccd9b1ee"
+                              name:
+                                type: string
+                                description: Name of the product.
+                                example: "brown tablede"
+                              price:
+                                type: number
+                                description: Price of the product.
+                                example: 30
+                          quantity:
+                            type: integer
+                            description: Quantity of the product ordered.
+                            example: 4
+                          shipping:
+                            type: string
+                            description: Shipping method selected for the item.
+                            example: "Regular"
+                          _id:
+                            type: string
+                            description: Unique identifier for the item in the order.
+                            example: "674b37b8dc3d9360b4c32e73"
+                    status:
+                      type: string
+                      description: Current status of the order.
+                      example: "pending"
+                    address:
+                      type: string
+                      description: Shipping address for the order.
+                      example: "Tester Dr, Blackwood SA 5051, Australia"
+                    createdAt:
+                      type: string
+                      description: Date when the order was created.
+                      example: "30 Nov 2024"
+                    __v:
+                      type: integer
+                      description: Version key for the order document.
+                      example: 0
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

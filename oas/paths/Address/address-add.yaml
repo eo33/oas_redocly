@@ -1,0 +1,34 @@
+post:
+  summary: Add an Address
+  operationId: add-an-address
+  description: This endpoint allows you to add an address for the user.
+  tags:
+    - Checkout
+  security:
+    - APIKey: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - address
+          properties:
+            address:
+              type: string
+              description: The address of the user to add. Newly added address will be selected as the main address.
+        example:
+          address: "383 Kent St, Sydney NSW 2000, Australia"
+  responses:
+    "200":
+      description: Successful response. The order has been created successfully.
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: success
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.

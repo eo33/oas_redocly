@@ -1,0 +1,70 @@
+delete:
+  summary: Remove Items from Cart
+  operationId: remove-items-from-cart
+  description: This endpoint allows you to delete specified items from the user's cart.
+  tags:
+    - Cart
+  security:
+    - APIKey: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            items:
+              type: array
+              description: List of product IDs to remove from the cart.
+              items:
+                type: string
+          example:
+            items:
+              - "67498e75990ee7506c8ee954"
+  responses:
+    "200":
+      description: Successful response. Returns the updated cart after deletion.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+                description: Unique identifier for the cart.
+              user:
+                type: string
+                description: Unique identifier for the user who owns the cart.
+              items:
+                type: array
+                description: List of remaining items in the cart.
+                items:
+                  type: object
+                  properties:
+                    product:
+                      type: string
+                      description: Unique identifier for the product.
+                    quantity:
+                      type: integer
+                      description: Quantity of the product in the cart.
+                    _id:
+                      type: string
+                      description: Unique identifier for the item in the cart.
+              __v:
+                type: integer
+                description: The version of the cart. The version increases whenever the cart is modified.
+            example:
+              _id: "6556aed27e6cd0b318dbb08d"
+              user: "6555a0f89feeac7dccd9b1dd"
+              items:
+                - product: "655fefee60b5a0bcc0a9313c"
+                  quantity: 40
+                  _id: "67498e82990ee7506c8ee958"
+                - product: "65653baad868691c42306f7f"
+                  quantity: 41
+                  _id: "6749904c990ee7506c8ee97d"
+              __v: 101
+    "400":
+      description: See message description.
+    "500":
+      description: see message description.
