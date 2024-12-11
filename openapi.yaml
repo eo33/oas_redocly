@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  description: This file contains the OpenAPI specifications for the Acocunt APIs of **The Furniture Bros**.
-  title: The Furniture Bros Account OpenAPI Specifications
+  description: This section contains the API documentation for **The Furniture Bros**.
+  title: API endpoints
   version: 1.0.0
   license:
     name: MIT License

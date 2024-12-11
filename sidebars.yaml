@@ -1,0 +1,15 @@
+- page: index.md
+  label: Introduction
+- page: get-started.md
+  label: Get Started
+- page: authenticaiton.md
+  label: Authentication
+- page: making-a-request.md
+  label: Making a request
+- page: examples.md
+  label: Examples
+- page: functionalities.md
+  label: Functionalities
+- separatorLine: true
+- page: ./openapi.yaml
+  label: Endpoints
